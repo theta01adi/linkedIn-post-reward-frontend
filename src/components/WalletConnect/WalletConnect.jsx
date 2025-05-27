@@ -1,5 +1,4 @@
-
-import { useWeb3State } from "../context/useWeb3Context";
+import { useWeb3State } from "../../context/useWeb3Context";
 
 const WalletConnect = () => {
   const { web3State, isWalletConnected, connectWallet } = useWeb3State();
