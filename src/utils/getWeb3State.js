@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
-
+import contracts from "../constants/contracts.json";
+import linkedInPostRewardAbi from "../constants/linkedInPostRewardAbi.json";
 
 export const getWeb3State = async () =>  {
 
@@ -24,9 +25,12 @@ export const getWeb3State = async () =>  {
         
         const provider = new ethers.BrowserProvider(window.ethereum)
         const signer = await provider.getSigner()
+        
+        const contractInstance = new ethers.Contract( contracts.linkedinpostreward, linkedInPostRewardAbi, signer )
+        console.log(contractInstance);
+        
 
-
-        return { chainId, provider, signer, accountAddress }
+        return { chainId, provider, signer, accountAddress, contractInstance }
 
     } catch (error) {
         console.error(error);
