@@ -10,7 +10,8 @@ const Web3Provider = ({ children }) => {
     provider: null,
     signer: null,
     accountAddress: null,
-    chainId: null
+    chainId: null,
+    contractInstance: null
   });
   const [isWalletConnected, setIsWalletConnected] = useState(false);
 
@@ -22,13 +23,14 @@ const Web3Provider = ({ children }) => {
         provider,
         signer,
         chainId,
-        accountAddress
+        accountAddress, 
+        contractInstance
       } = await getWeb3State();
       setWeb3State({
         provider,
         signer,
         accountAddress,
-        chainId
+        chainId, contractInstance
       });
       localStorage.setItem("isWalletConnected", true);
       setIsWalletConnected(true);
@@ -36,7 +38,8 @@ const Web3Provider = ({ children }) => {
         provider,
         signer,
         chainId,
-        accountAddress
+        accountAddress,
+        contractInstance
       });
     } catch (error) {
       console.error(error);
@@ -55,13 +58,14 @@ const Web3Provider = ({ children }) => {
           provider,
           signer,
           chainId,
-          accountAddress
+          accountAddress, contractInstance
         } = await getWeb3StateSilent();
         setWeb3State({
           provider,
           signer,
           accountAddress,
-          chainId
+          chainId,
+          contractInstance
         });
         setIsWalletConnected(true);
 
