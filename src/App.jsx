@@ -1,4 +1,5 @@
 
+import PostSubmit from './components/PostSubmit/PostSubmit.jsx'
 import UserRegistration from './components/UserRegistration/UserRegistration.jsx'
 import WalletConnect from './components/WalletConnect/WalletConnect.jsx'
 import Web3Provider from './context/Web3Provider.jsx'
@@ -9,7 +10,8 @@ function App() {
     <>
     <Web3Provider>
     <WalletConnect/>
-    <UserRegistration/>
+    <PostSubmit/>
+    {/* <UserRegistration/> */}
     </Web3Provider>
     </>
   )
