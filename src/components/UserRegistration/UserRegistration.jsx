@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { useWeb3State } from '../../context/useWeb3Context';
+import { useNavigate } from 'react-router-dom';
 
 const UserRegistration = () => {
 
+    const walletStatus = localStorage.getItem("isWalletConnected")
     const [username, setUsername] = useState("");
     const { web3State , isWalletConnected } = useWeb3State();
     const { accountAddress, contractInstance } = web3State;
+    const navigate = useNavigate()
 
-    // useEffect(() => {
+    useEffect(() => {
 
+        if(!walletStatus){
+            alert("Connect your wallet first !")
+            navigate("/")
+        }
 
-
-    // }, [isWalletConnected, web3State])
+    }, [isWalletConnected])
 
     const registerUser = async () => {
         if(!accountAddress && !contractInstance){

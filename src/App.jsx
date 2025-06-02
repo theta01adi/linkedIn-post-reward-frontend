@@ -1,17 +1,13 @@
-
-import PostSubmit from './components/PostSubmit/PostSubmit.jsx'
-import UserRegistration from './components/UserRegistration/UserRegistration.jsx'
-import WalletConnect from './components/WalletConnect/WalletConnect.jsx'
+import { RouterProvider } from 'react-router-dom'
 import Web3Provider from './context/Web3Provider.jsx'
+import { routes } from './routes/routes.jsx'
 
 function App() {
 
   return (
     <>
     <Web3Provider>
-    <WalletConnect/>
-    <PostSubmit/>
-    {/* <UserRegistration/> */}
+    <RouterProvider router={routes}/>
     </Web3Provider>
     </>
   )

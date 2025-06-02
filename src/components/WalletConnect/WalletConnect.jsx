@@ -1,8 +1,17 @@
+import { useEffect } from "react";
 import { useWeb3State } from "../../context/useWeb3Context";
+import { useNavigate } from "react-router-dom";
 
 const WalletConnect = () => {
   const { web3State, isWalletConnected, connectWallet } = useWeb3State();
   const { accountAddress } = web3State;
+  const navigate = useNavigate();
+
+  useEffect(()=> {
+    if(isWalletConnected){
+      navigate("/home")
+    }
+  } ,[ isWalletConnected])
 
   return (
     <div className="flex items-center">
