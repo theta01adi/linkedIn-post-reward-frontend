@@ -27,6 +27,7 @@ const WalletConnect = () => {
           Connect Wallet
         </button>
       )}
+      <a href="https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">No metamask ? Install</a>
     </div>
   );
 };
