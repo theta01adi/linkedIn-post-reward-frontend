@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useWeb3State } from "../../context/useWeb3Context";
+import axios from "axios";
 
 const PostSubmit = () => {
   const [postContent, setPostContent] = useState("");
@@ -8,47 +9,47 @@ const PostSubmit = () => {
   const [ base64Img, setBase64Img ] = useState(null)
 
   const { web3State } = useWeb3State();
-  const { isWalletConnected } = web3State;
+  const { isWalletConnected, signer, accountAddress } = web3State;
 
-  // handle post submit using form data 
-  const handlePostSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (!postScreenshot) {
-        alert("Provide the post screenshot !!");
-        return;
-      }
+  // // handle post submit using form data 
+  // const handlePostSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     if (!postScreenshot) {
+  //       alert("Provide the post screenshot !!");
+  //       return;
+  //     }
 
-      if (!postContent) {
-        alert("Provide the post content !!");
-        return;
-      }
+  //     if (!postContent) {
+  //       alert("Provide the post content !!");
+  //       return;
+  //     }
 
-      const formData = new FormData();
+  //     const formData = new FormData();
 
-      formData.append("postContent", postContent);
-      formData.append("postScreenshot", postScreenshot);
+  //     formData.append("postContent", postContent);
+  //     formData.append("postScreenshot", postScreenshot);
 
-      for (let [key, value] of formData.entries()) {
-        console.log(value);
-        console.log(`${key}: ${value}`);
-      }
+  //     for (let [key, value] of formData.entries()) {
+  //       console.log(value);
+  //       console.log(`${key}: ${value}`);
+  //     }
 
-      console.log(postContent);
-      console.log(postScreenshot);
+  //     console.log(postContent);
+  //     console.log(postScreenshot);
 
-      setPostContent("");
-      setPostScreenshot(null);
+  //     setPostContent("");
+  //     setPostScreenshot(null);
 
-    } catch (error) {
-      console.error(error);
-      alert(error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert(error);
+  //   }
+  // };
 
 
 //   handle form submit using base 64 data
-const handlePostSubmitBase = async (e) => {
+const handlePostSubmit = async (e) => {
     e.preventDefault();
     try {
       if (!postScreenshot) {
@@ -65,25 +66,54 @@ const handlePostSubmitBase = async (e) => {
       convertToBase64(postScreenshot)
       console.log("Base64 : " + base64Img);
       console.log("Base64Ref : " + base64Ref.current);
+
+      // need values to backend , postBase64, postContent, userAddress, signedMessage
+
+      const ORIGINAL_POST_SUBMIT_MESSAGE = "You are submiting your linkedin post screenshot and post content to LinkedInPost Reward Dapp !!"
+
+      const signedMessage = await signer.signMessage(ORIGINAL_POST_SUBMIT_MESSAGE)
+      console.log(signedMessage);
+
+      const response = await axios.post("http://127.0.0.1:5000/submit-post", {
+        postContent : postContent,
+        postBase64 : base64Img,
+        userAddress : accountAddress,
+        signedMessage : signedMessage
+      })
+
+      console.log(response);
+      
+      if (response.data.success) {
+        console.log("Post submitted successfully with transaction hash :", response.data.tx_hash);
+        alert("You submitted your linkedIn post successfully!");
+      } else {
+        throw new Error(response.data.message || "Post submission failed on backend.");
+      }
+
       
       setPostContent("");
       setPostScreenshot(null);
       base64Ref.current = "";
     } catch (error) {
-      console.error(error);
-      alert(error);
+      if (error.response && error.response.data) {
+        const errMsg = error.response.data.message || "An error occurred.";
+        alert(`⚠️ ${errMsg}`);
+      } else {
+        alert("❌ Network error or server is down.");
+      }
     }
   };
-
-
 
 
   const convertToBase64 = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
-    base64Ref.current = reader.result;
-      console.log("File content:", reader.result); // base64 string or text
-      setBase64Img(reader.result)
+      const result = reader.result;
+      const base64Data = result.split(',')[1];
+      base64Ref.current = base64Data;
+      
+      // base64 string or text
+      setBase64Img(base64Data)
     };
 
    reader.readAsDataURL(file);

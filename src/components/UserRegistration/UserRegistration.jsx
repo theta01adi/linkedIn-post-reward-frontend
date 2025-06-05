@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useWeb3State } from '../../context/useWeb3Context';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const UserRegistration = () => {
 
     const walletStatus = localStorage.getItem("isWalletConnected")
     const [username, setUsername] = useState("");
     const { web3State , isWalletConnected } = useWeb3State();
-    const { accountAddress, contractInstance } = web3State;
+    const { accountAddress, contractInstance , signer } = web3State;
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -39,14 +40,30 @@ const UserRegistration = () => {
             console.log("Username:", username);
             console.log("Account Address:", accountAddress);
 
-            const tx = await contractInstance.register_user(username);
-            console.log("Transaction:", tx);
-            tx.wait();
+            const REGISTER_MESSAGE = "You are registering to LinkedInPost Reward Dapp !!  You agree with our terms and conditions.";
+            console.log(signer);
             
-            console.log("User registered successfully:", username);
-            alert("You registered successfully!");
-            navigate("/home")
+            const signedMessage = await signer.signMessage(REGISTER_MESSAGE)
+            console.log(signedMessage);
 
+           
+            const response = await axios.post("http://127.0.0.1:5000/register-user", {
+              username,
+              walletAddress: accountAddress,
+              signedMessage,
+            });
+
+            console.log(response);
+            
+            
+            if (response.data.success) {
+              console.log("User registered successfully:", username);
+              alert("You registered successfully!");
+              navigate("/home");
+            } else {
+              throw new Error(response.data.message || "Registration failed on backend.");
+            }
+        
         }catch (error){
             console.error("Error registering user:", error);
             alert("Error registering user. Please try again.");
