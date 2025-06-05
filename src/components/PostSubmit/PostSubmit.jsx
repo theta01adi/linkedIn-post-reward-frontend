@@ -63,7 +63,9 @@ const handlePostSubmit = async (e) => {
       }
 
       // Base64 image data
-      convertToBase64(postScreenshot)
+      const base64Data = await convertToBase64(postScreenshot)
+      setBase64Img(base64Data)
+      base64Ref.current = base64Data
       console.log("Base64 : " + base64Img);
       console.log("Base64Ref : " + base64Ref.current);
 
@@ -76,7 +78,7 @@ const handlePostSubmit = async (e) => {
 
       const response = await axios.post("http://127.0.0.1:5000/submit-post", {
         postContent : postContent,
-        postBase64 : base64Img,
+        postBase64 : base64Ref.current,
         userAddress : accountAddress,
         signedMessage : signedMessage
       })
@@ -106,18 +108,21 @@ const handlePostSubmit = async (e) => {
 
 
   const convertToBase64 = (file) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result;
-      const base64Data = result.split(',')[1];
-      base64Ref.current = base64Data;
-      
-      // base64 string or text
-      setBase64Img(base64Data)
-    };
-
-   reader.readAsDataURL(file);
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+  
+      reader.onload = () => {
+        const result = reader.result;
+        const base64Data = result.split(',')[1];
+        resolve(base64Data);  // resolve promise with base64 string
+      };
+  
+      reader.onerror = (error) => reject(error);
+  
+      reader.readAsDataURL(file);
+    });
   };
+  
 
   // if(!isWalletConnected) {
   //     return (
@@ -134,7 +139,7 @@ const handlePostSubmit = async (e) => {
           Submit Your LinkedIn Post
         </h2>
 
-        <form onSubmit={handlePostSubmit} className="space-y-4">
+        <form onSubmit={(e) => handlePostSubmit(e)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Post Screenshot
