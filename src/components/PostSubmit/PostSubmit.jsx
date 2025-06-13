@@ -133,48 +133,51 @@ const handlePostSubmit = async (e) => {
   // }
 
   return(
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-start py-10 px-4">
-      <div className="w-full max-w-2xl bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
-          Submit Your LinkedIn Post
-        </h2>
-
-        <form onSubmit={(e) => handlePostSubmit(e)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Post Screenshot
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setPostScreenshot(e.target.files[0])}
-              className="mt-1 block w-full text-sm text-gray-900 bg-white dark:bg-gray-700 dark:text-white rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Post Content
-            </label>
-            <textarea
-              value={postContent}
-              onChange={(e) => setPostContent(e.target.value)}
-              rows="4"
-              placeholder="Write what you posted..."
-              className="mt-1 block w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
-          >
-            Submit Post
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+  
+      
+        <div className="w-full max-w-5xl p-8">
+       
+          <form onSubmit={(e) => handlePostSubmit(e)} className="space-y-6">
+            {/* Screenshot Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Post Screenshot
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setPostScreenshot(e.target.files[0])}
+                className="block w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 dark:text-white rounded-md border border-gray-300 dark:border-gray-600 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+              />
+            </div>
+    
+            {/* Post Content */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Post Content
+              </label>
+              <textarea
+                value={postContent}
+                onChange={(e) => setPostContent(e.target.value)}
+                rows="5"
+                placeholder="Write what you posted..."
+                className="block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white rounded-md border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              />
+            </div>
+    
+            {/* Submit Button */}
+            <div>
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-md transition duration-300 shadow-sm"
+              >
+                🚀 Submit Post
+              </button>
+            </div>
+          </form>
+        </div>
+    
+    );
 };
 
 export default PostSubmit;

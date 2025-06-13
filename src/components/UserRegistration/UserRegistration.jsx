@@ -59,7 +59,7 @@ const UserRegistration = () => {
             if (response.data.success) {
               console.log("User registered successfully:", username);
               alert("You registered successfully!");
-              navigate("/home");
+              setTimeout(() => navigate("/home"), 6000);
             } else {
               throw new Error(response.data.message || "Registration failed on backend.");
             }
